@@ -49,8 +49,9 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({
           alt={program.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {/* Darkened gradient overlay for high contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+        {/* Darkened gradient overlays for high contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
 
         {/* Top Badges with Backdrop Blur */}
         <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">

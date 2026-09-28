@@ -20,15 +20,18 @@ export const PostCard: React.FC<PostCardProps> = ({ story, onReadMore, className
           alt={story.title}
           className="w-full h-full object-cover transition-transform duration-500 ease-out md:group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+        {/* Top Gradient Overlay for Contrast Protection */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
-        <div className="absolute top-3 left-3">
-          <span className="editorial-badge-green text-[10px]">
+        {/* Contrast-Protected Floating Category Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm text-xs font-bold text-emerald-800 shadow-sm">
             {story.category}
           </span>
         </div>
 
-        <div className="absolute bottom-2.5 right-3 flex items-center gap-1 text-[10px] font-mono text-slate-800 bg-white/95 backdrop-blur-md border border-slate-200 px-2 py-0.5 rounded shadow-sm">
+        <div className="absolute bottom-2.5 right-3 z-10 flex items-center gap-1 text-[10px] font-mono text-slate-800 bg-white/95 backdrop-blur-md border border-slate-200 px-2 py-0.5 rounded shadow-sm">
           <Clock size={10} className="text-blue-600" />
           <span>{story.readTime}</span>
         </div>
