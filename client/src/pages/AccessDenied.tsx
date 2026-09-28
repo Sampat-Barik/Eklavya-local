@@ -71,11 +71,11 @@ export const AccessDenied: React.FC = () => {
 
           {isLevel5NormalUser ? (
             <Link
-              to="/help-us"
+              to="/recruitment"
               className="flex-1 py-3 px-4 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold transition-all shadow-md shadow-teal-900/20 flex items-center justify-center gap-2"
             >
               <Heart size={14} />
-              <span>Apply to Join</span>
+              <span>Apply for Recruitment</span>
             </Link>
           ) : user ? (
             <Link

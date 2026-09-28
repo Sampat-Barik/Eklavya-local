@@ -60,8 +60,25 @@ export const Register: React.FC = () => {
             <Sparkles size={14} />
             <span>CREATE MEMBER ACCOUNT</span>
           </div>
-          <h1 className="text-3xl font-serif font-extrabold text-slate-900">Register with Eklavya</h1>
-          <p className="text-xs font-medium text-slate-500">Join the student-led socio-animal welfare society at HIT Haldia</p>
+          <h1 className="text-3xl font-serif font-extrabold text-slate-900">Create Portal Account</h1>
+          <p className="text-xs font-medium text-slate-500">Access public certificates, attendance tracking & donations ledger</p>
+        </div>
+
+        {/* Student Volunteer Recruitment Notice */}
+        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 space-y-1.5 text-left">
+          <span className="font-bold font-mono uppercase tracking-wide text-amber-900 flex items-center gap-1.5">
+            <GraduationCap size={15} />
+            <span>Looking for Active Club Membership?</span>
+          </span>
+          <p className="text-[11px] leading-relaxed text-slate-700 font-normal">
+            Active membership into Eklavya is <strong>not</strong> an immediate sign-up; it is subject to our annual selection process. Please submit the official recruitment application:
+          </p>
+          <Link
+            to="/recruitment"
+            className="inline-flex items-center gap-1 font-bold text-amber-900 hover:text-amber-950 underline text-xs"
+          >
+            <span>Go to Campus Intake & Recruitment Form →</span>
+          </Link>
         </div>
 
         {error && (

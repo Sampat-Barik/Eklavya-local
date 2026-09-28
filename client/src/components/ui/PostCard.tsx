@@ -11,14 +11,14 @@ interface PostCardProps {
 export const PostCard: React.FC<PostCardProps> = ({ story, onReadMore, className = '' }) => {
   return (
     <div
-      className={`flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white/90 backdrop-blur-md shadow-md hover:border-emerald-500/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group ${className}`}
+      className={`flex flex-col justify-between overflow-hidden rounded-xl border border-emerald-100 md:border-slate-200 bg-white/90 backdrop-blur-md shadow-md active:scale-[0.98] md:active:scale-100 md:hover:border-emerald-500/40 md:hover:shadow-lg md:hover:-translate-y-1 transition-all duration-300 ease-out group ${className}`}
     >
       {/* Post Thumbnail */}
-      <div className="relative h-44 sm:h-48 overflow-hidden bg-slate-100 cursor-pointer" onClick={() => onReadMore(story)}>
+      <div className="relative h-44 md:h-48 overflow-hidden bg-slate-100 cursor-pointer" onClick={() => onReadMore(story)}>
         <img
           src={story.imageUrl}
           alt={story.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out md:group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
 
@@ -37,7 +37,7 @@ export const PostCard: React.FC<PostCardProps> = ({ story, onReadMore, className
       {/* Post Body */}
       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
         <div className="space-y-1.5 cursor-pointer" onClick={() => onReadMore(story)}>
-          <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+          <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 md:group-hover:text-blue-600 transition-colors leading-snug">
             {story.title}
           </h3>
           <p className="text-slate-700 text-xs sm:text-sm leading-relaxed line-clamp-3 font-normal">
@@ -63,10 +63,10 @@ export const PostCard: React.FC<PostCardProps> = ({ story, onReadMore, className
 
           <button
             onClick={() => onReadMore(story)}
-            className="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1 group/link transition-colors cursor-pointer"
+            className="text-xs font-semibold text-blue-700 md:hover:text-blue-900 flex items-center gap-1 group/link transition-colors cursor-pointer"
           >
             <span>Read Dispatch</span>
-            <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
+            <ArrowRight size={12} className="md:group-hover/link:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

@@ -97,7 +97,7 @@ export const EventsSection: React.FC = () => {
 
         {/* Right Column: Next Major Event Spotlight Card (5 cols) */}
         <div className="lg:col-span-5 lg:sticky lg:top-28">
-          <div className="rounded-2xl bg-white/90 backdrop-blur-md text-slate-900 p-7 sm:p-8 border border-emerald-100 shadow-xl shadow-teal-950/5 relative overflow-hidden space-y-6">
+          <div className="rounded-2xl bg-white/90 backdrop-blur-md text-slate-900 p-7 sm:p-8 border border-emerald-100 shadow-xl shadow-teal-950/5 relative overflow-hidden space-y-6 active:scale-[0.98] md:active:scale-100 md:hover:-translate-y-1 md:hover:shadow-2xl transition-all duration-300 ease-out group">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -130,10 +130,10 @@ export const EventsSection: React.FC = () => {
 
             <div className="pt-2">
               <Link
-                to="/register"
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-800 to-emerald-600 hover:from-teal-700 hover:to-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-900/15"
+                to="/recruitment"
+                className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-teal-800 to-emerald-600 hover:from-teal-700 hover:to-emerald-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-900/15"
               >
-                <span>Join Volunteer Roster</span>
+                <span>Apply for Recruitment</span>
                 <ArrowRight size={13} />
               </Link>
             </div>

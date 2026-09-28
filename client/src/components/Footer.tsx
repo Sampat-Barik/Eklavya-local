@@ -4,24 +4,31 @@ import { Mail, MapPin, ArrowUpRight, Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full border-t border-slate-200 bg-white mt-24 text-slate-900">
-      <div className="max-w-[1720px] 2xl:max-w-[1800px] w-full mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
+    <footer className="relative w-full border-t border-slate-800 bg-[#0F172A] mt-24 text-slate-200 overflow-hidden">
+      {/* Desktop-only tactile print-like SVG noise/grain overlay (hidden on mobile for performance) */}
+      <div
+        className="hidden md:block absolute inset-0 pointer-events-none grain-overlay z-0"
+        style={{ opacity: 0.025 }}
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 max-w-[1720px] 2xl:max-w-[1800px] w-full mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14">
           {/* Brand Column (5 cols) */}
           <div className="md:col-span-5 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-slate-200 p-0.5 bg-slate-50 shadow-xs flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-full border border-slate-700 p-0.5 bg-slate-800 shadow-xs flex items-center justify-center shrink-0">
                 <img src="/eklavya_logo.png" alt="Eklavya Crest" className="w-full h-full object-contain p-1" />
               </div>
               <div className="leading-none">
-                <span className="font-serif font-extrabold text-xl tracking-tight text-slate-900">Eklavya</span>
-                <span className="block font-mono text-[10px] uppercase tracking-wider text-emerald-700 font-bold mt-1">
+                <span className="font-serif font-extrabold text-xl tracking-tight text-white">Eklavya</span>
+                <span className="block font-mono text-[10px] uppercase tracking-wider text-emerald-400 font-bold mt-1">
                   Socio-Animal Welfare Society • HIT Haldia
                 </span>
               </div>
             </div>
 
-            <p className="text-slate-700 text-xs sm:text-sm font-normal leading-relaxed max-w-md">
+            <p className="text-slate-300 text-xs sm:text-sm font-normal leading-relaxed max-w-md">
               A student-driven humanitarian and animal rescue society at Haldia Institute of Technology. Marching forward to provide free evening primary education to village children and 24/7 medical rescue for stray animals.
             </p>
 
@@ -30,7 +37,7 @@ export const Footer: React.FC = () => {
                 href="https://www.instagram.com/eklavyaofficial_?igsh=MXg3eGN6eHR5Y2tqeA=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-700 hover:text-blue-600 hover:border-blue-300 transition-colors shadow-xs"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl border border-slate-800 bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-pink-400 hover:border-pink-500/50 transition-colors shadow-xs"
                 aria-label="Instagram"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -41,7 +48,7 @@ export const Footer: React.FC = () => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-700 hover:text-blue-600 hover:border-blue-300 transition-colors shadow-xs"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl border border-slate-800 bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-blue-400 hover:border-blue-500/50 transition-colors shadow-xs"
                 aria-label="Facebook"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -52,7 +59,7 @@ export const Footer: React.FC = () => {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-700 hover:text-blue-600 hover:border-blue-300 transition-colors shadow-xs"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl border border-slate-800 bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-sky-400 hover:border-sky-500/50 transition-colors shadow-xs"
                 aria-label="LinkedIn"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -64,24 +71,24 @@ export const Footer: React.FC = () => {
 
           {/* Navigation Column (2 cols) */}
           <div className="md:col-span-2 space-y-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-blue-700 font-bold block">
+            <span className="font-mono text-xs uppercase tracking-wider text-blue-400 font-bold block">
               Navigation
             </span>
-            <ul className="space-y-2 text-xs sm:text-sm font-medium text-slate-700">
+            <ul className="space-y-2 text-xs sm:text-sm font-medium text-slate-300">
               <li>
-                <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                <Link to="/" className="hover:text-white transition-colors">Home</Link>
               </li>
               <li>
-                <Link to="/vision" className="hover:text-blue-600 transition-colors">Vision & Mission</Link>
+                <Link to="/vision" className="hover:text-white transition-colors">Vision & Mission</Link>
               </li>
               <li>
-                <Link to="/our-work" className="hover:text-blue-600 transition-colors">Our Work</Link>
+                <Link to="/our-work" className="hover:text-white transition-colors">Our Work</Link>
               </li>
               <li>
-                <Link to="/events" className="hover:text-blue-600 transition-colors">Upcoming Events</Link>
+                <Link to="/events" className="hover:text-white transition-colors">Upcoming Events</Link>
               </li>
               <li>
-                <Link to="/help-us" className="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline">
+                <Link to="/help-us" className="inline-flex items-center gap-1 text-emerald-400 font-bold hover:underline hover:text-emerald-300">
                   <span>Help Us</span>
                   <ArrowUpRight size={13} />
                 </Link>
@@ -91,40 +98,46 @@ export const Footer: React.FC = () => {
 
           {/* Community Column (2 cols) */}
           <div className="md:col-span-2 space-y-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-emerald-700 font-bold block">
+            <span className="font-mono text-xs uppercase tracking-wider text-emerald-400 font-bold block">
               Community
             </span>
-            <ul className="space-y-2 text-xs sm:text-sm font-medium text-slate-700">
+            <ul className="space-y-2 text-xs sm:text-sm font-medium text-slate-300">
               <li>
-                <Link to="/faculty" className="hover:text-emerald-600 transition-colors">Faculty Mentor</Link>
+                <Link to="/faculty" className="hover:text-white transition-colors">Faculty Mentor</Link>
               </li>
               <li>
-                <Link to="/members" className="hover:text-emerald-600 transition-colors">Active Squad</Link>
+                <Link to="/members" className="hover:text-white transition-colors">Active Squad</Link>
               </li>
               <li>
-                <Link to="/alumni" className="hover:text-emerald-600 transition-colors">Esteemed Alumni</Link>
+                <Link to="/alumni" className="hover:text-white transition-colors">Esteemed Alumni</Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-blue-600 transition-colors">Portal Login</Link>
+                <Link to="/recruitment" className="hover:text-teal-300 text-teal-400 font-bold transition-colors">Campus Intake</Link>
+              </li>
+              <li>
+                <Link to="/corporate-partnerships" className="hover:text-blue-300 text-blue-400 font-bold transition-colors">Corporate CSR</Link>
+              </li>
+              <li>
+                <Link to="/login" className="hover:text-blue-300 text-blue-400 transition-colors">Portal Login</Link>
               </li>
             </ul>
           </div>
 
           {/* Coordinates Column (3 cols) */}
           <div className="md:col-span-3 space-y-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-blue-700 font-bold block">
+            <span className="font-mono text-xs uppercase tracking-wider text-blue-400 font-bold block">
               Campus Headquarters
             </span>
-            <div className="space-y-2.5 text-xs text-slate-700">
+            <div className="space-y-2.5 text-xs text-slate-300">
               <div className="flex items-start gap-2">
-                <MapPin size={15} className="text-emerald-600 shrink-0 mt-0.5" />
+                <MapPin size={15} className="text-emerald-400 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
                   Student Activity Center, Haldia Institute of Technology, Purba Medinipur, WB 721657
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail size={15} className="text-blue-600 shrink-0" />
-                <a href="mailto:eklavya.official.haldia@gmail.com" className="hover:text-blue-600 transition-colors font-mono">
+                <Mail size={15} className="text-blue-400 shrink-0" />
+                <a href="mailto:eklavya.official.haldia@gmail.com" className="hover:text-white transition-colors font-mono">
                   eklavya.official.haldia@gmail.com
                 </a>
               </div>
@@ -133,10 +146,10 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Hairline Divided Bottom Bar */}
-        <div className="border-t border-slate-200 mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-600 gap-3">
+        <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-3">
           <p>© 2026 Eklavya Society. Affiliated with Haldia Institute of Technology.</p>
-          <p className="font-mono text-[11px] text-emerald-700 font-bold tracking-wider uppercase flex items-center gap-1.5">
-            <Heart size={12} className="text-emerald-600 fill-current" />
+          <p className="font-mono text-[11px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1.5">
+            <Heart size={12} className="text-emerald-400 fill-current" />
             <span>ENGINEERED WITH EMPATHY • HANDS THAT CARE</span>
           </p>
         </div>

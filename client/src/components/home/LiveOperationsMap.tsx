@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SectionTitle } from '../ui/SectionTitle';
-import { MapPin, BookOpen, Heart, Navigation, ExternalLink, ShieldCheck, Sparkles, Compass } from 'lucide-react';
+import { MapPin, BookOpen, Heart, Navigation, ExternalLink, ShieldCheck, Sparkles, Compass, Lock } from 'lucide-react';
 
 interface OperationCentre {
   id: string;
@@ -80,7 +80,87 @@ const CENTRES: OperationCentre[] = [
 
 export const LiveOperationsMap: React.FC = () => {
   const [selectedCentreId, setSelectedCentreId] = useState<string>('hit-campus');
+  const [isMapActive, setIsMapActive] = useState<boolean>(false);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [activeCarouselIndex, setActiveCarouselIndex] = useState<number>(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const currentCentre = CENTRES.find((c) => c.id === selectedCentreId) || CENTRES[0];
+
+  const handleCarouselScroll = () => {
+    if (!carouselRef.current) return;
+    const container = carouselRef.current;
+    const scrollLeft = container.scrollLeft;
+    const clientWidth = container.clientWidth;
+    const cardElements = container.children;
+    if (!cardElements || cardElements.length === 0) return;
+
+    const scrollCenter = scrollLeft + clientWidth / 2;
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    for (let i = 0; i < cardElements.length; i++) {
+      const el = cardElements[i] as HTMLElement;
+      const elCenter = el.offsetLeft + el.offsetWidth / 2;
+      const distance = Math.abs(scrollCenter - elCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = i;
+      }
+    }
+    setActiveCarouselIndex(closestIndex);
+  };
+
+  useEffect(() => {
+    const idx = CENTRES.findIndex((c) => c.id === selectedCentreId);
+    if (idx !== -1 && idx !== activeCarouselIndex) {
+      setActiveCarouselIndex(idx);
+    }
+  }, [selectedCentreId]);
+
+  // Revert pointer-events back to none if user taps outside or scrolls past section
+  useEffect(() => {
+    if (!isMapActive) return;
+
+    const handlePointerDown = (event: PointerEvent | MouseEvent | TouchEvent) => {
+      if (mapContainerRef.current && !mapContainerRef.current.contains(event.target as Node)) {
+        setIsMapActive(false);
+      }
+    };
+
+    const handleScroll = () => {
+      if (!mapContainerRef.current) return;
+      const rect = mapContainerRef.current.getBoundingClientRect();
+      if (rect.bottom < 50 || rect.top > window.innerHeight - 50) {
+        setIsMapActive(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    let observer: IntersectionObserver | null = null;
+    if (mapContainerRef.current) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
+              setIsMapActive(false);
+            }
+          });
+        },
+        { threshold: [0, 0.2] }
+      );
+      observer.observe(mapContainerRef.current);
+    }
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('scroll', handleScroll);
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [isMapActive]);
 
   return (
     <section className="space-y-8">
@@ -109,76 +189,165 @@ export const LiveOperationsMap: React.FC = () => {
           <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
             
             {/* Embedded Google Map Frame */}
-            <div className="relative w-full h-[360px] sm:h-[420px] rounded-2xl overflow-hidden border border-emerald-200/90 shadow-md bg-slate-100 group">
-              <iframe
-                key={currentCentre.id}
-                src={currentCentre.embedUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                title={`${currentCentre.name} Google Map Location`}
-                className="w-full h-full"
-              />
+            <div
+              ref={mapContainerRef}
+              className="relative w-full max-w-full overflow-hidden rounded-2xl border border-emerald-200/90 shadow-md bg-slate-100 group"
+            >
+              <div
+                className={`w-full h-[340px] sm:h-[420px] horizontal-scroll-container overscroll-x-contain touch-pan-x touch-pan-y relative ${
+                  isMapActive ? 'pointer-events-auto' : 'pointer-events-none md:pointer-events-auto'
+                }`}
+              >
+                <iframe
+                  key={currentCentre.id}
+                  src={currentCentre.embedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  title={`${currentCentre.name} Google Map Location`}
+                  className={`w-full h-full min-w-full ${
+                    isMapActive ? 'pointer-events-auto' : 'pointer-events-none md:pointer-events-auto'
+                  }`}
+                />
+              </div>
+
+              {/* Mobile-Only Overlay & Floating "Tap to Explore Map" Button */}
+              {!isMapActive && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 backdrop-blur-[1px] md:hidden pointer-events-none">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsMapActive(true);
+                    }}
+                    className="pointer-events-auto min-h-[44px] min-w-[44px] px-5 py-3 rounded-2xl bg-slate-900/95 hover:bg-slate-950 text-white font-mono text-xs font-bold uppercase tracking-wider shadow-2xl border border-white/20 flex items-center gap-2.5 active:scale-95 transition-transform cursor-pointer"
+                  >
+                    <Navigation size={15} className="text-emerald-400 animate-pulse" />
+                    <span>Tap to Explore Map</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Mobile-Only "Done / Lock Map" Badge */}
+              {isMapActive && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMapActive(false);
+                  }}
+                  className="md:hidden absolute top-3 left-3 z-20 min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-900/95 hover:bg-slate-950 text-white text-xs font-mono font-bold tracking-wide shadow-xl border border-slate-700/80 flex items-center gap-2 active:scale-95 transition-all cursor-pointer backdrop-blur-md"
+                >
+                  <Lock size={13} className="text-emerald-400" />
+                  <span>Done / Lock Map</span>
+                </button>
+              )}
 
               {/* GPS Stamp Floating Pill */}
-              <div className="absolute top-3 left-3 z-10 pointer-events-none flex items-center gap-2">
+              <div className={`absolute top-3 left-3 z-10 pointer-events-none items-center gap-2 ${
+                isMapActive ? 'hidden sm:flex' : 'flex'
+              }`}>
                 <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-teal-950 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-200 shadow-md">
                   <MapPin size={13} className="text-emerald-600" />
                   <span>{currentCentre.gpsLabel}</span>
                 </div>
               </div>
 
-              {/* Direct Full-Screen Google Maps Trigger */}
+              {/* Direct Full-Screen Google Maps Trigger (Touch Target >= 44x44) */}
               <a
                 href={currentCentre.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute top-3 right-3 z-10 flex items-center gap-1.5 text-[11px] font-bold text-teal-950 bg-white/95 hover:bg-emerald-50 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-200 shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
+                className="absolute top-3 right-3 z-10 min-h-[44px] flex items-center gap-1.5 text-[11px] font-bold text-teal-950 bg-white/95 hover:bg-emerald-50 backdrop-blur-md px-3.5 py-2 rounded-xl border border-emerald-200 shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
                 title="Open in Google Maps"
               >
-                <Compass size={13} className="text-teal-700" />
+                <Compass size={14} className="text-teal-700" />
                 <span className="hidden sm:inline">View on Google Maps</span>
-                <ExternalLink size={11} className="text-slate-400" />
+                <ExternalLink size={12} className="opacity-70" />
               </a>
             </div>
 
-            {/* 3 Centre Quick-Selector Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {CENTRES.map((centre) => {
-                const isSelected = centre.id === selectedCentreId;
-                return (
-                  <button
-                    key={centre.id}
-                    onClick={() => setSelectedCentreId(centre.id)}
-                    className={`p-3.5 rounded-2xl text-left transition-all border cursor-pointer flex flex-col justify-between ${
-                      isSelected
-                        ? 'bg-gradient-to-br from-teal-50 to-emerald-50/70 border-teal-600 shadow-sm ring-2 ring-teal-500/20'
-                        : 'bg-white hover:bg-slate-50 border-slate-200/80 text-slate-700'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className={`text-[10px] font-mono uppercase tracking-wider font-extrabold ${isSelected ? 'text-teal-800' : 'text-slate-400'}`}>
-                          {centre.shortName}
-                        </span>
-                        <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-emerald-500 ring-2 ring-emerald-200' : 'bg-slate-300'}`} />
+            {/* 3 Centre Quick-Selector Cards (Horizontal Carousel on Mobile, 3 cols on Desktop) */}
+            <div className="space-y-2">
+              <div
+                ref={carouselRef}
+                onScroll={handleCarouselScroll}
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-4 pb-4 md:grid md:grid-cols-3 md:gap-3 md:overflow-visible md:pb-0 horizontal-scroll-container overscroll-x-contain"
+              >
+                {CENTRES.map((centre, index) => {
+                  const isSelected = centre.id === selectedCentreId;
+                  return (
+                    <button
+                      key={centre.id}
+                      onClick={() => {
+                        setSelectedCentreId(centre.id);
+                        setActiveCarouselIndex(index);
+                      }}
+                      className={`min-h-[110px] min-w-[85vw] max-w-[85vw] md:min-w-0 md:max-w-none snap-center md:snap-align-none shrink-0 md:shrink p-3.5 rounded-2xl text-left transition-all border cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? 'bg-gradient-to-br from-teal-50 to-emerald-50/70 border-teal-600 shadow-sm ring-2 ring-teal-500/20'
+                          : 'bg-white hover:bg-slate-50 border-slate-200/80 text-slate-700'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className={`text-[10px] font-mono uppercase tracking-wider font-extrabold ${isSelected ? 'text-teal-800' : 'text-slate-400'}`}>
+                            {centre.shortName}
+                          </span>
+                          <span className={`w-2.5 h-2.5 rounded-full ${isSelected ? 'bg-emerald-500 ring-2 ring-emerald-200' : 'bg-slate-300'}`} />
+                        </div>
+                        <h4 className={`text-xs font-bold leading-tight ${isSelected ? 'text-teal-950 font-black' : 'text-slate-900'}`}>
+                          {centre.name}
+                        </h4>
                       </div>
-                      <h4 className={`text-xs font-bold leading-tight ${isSelected ? 'text-teal-950 font-black' : 'text-slate-900'}`}>
-                        {centre.name}
-                      </h4>
-                    </div>
-                    <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-                      <span className={`${isSelected ? 'text-teal-700 font-bold' : 'text-slate-500'}`}>
-                        {centre.beneficiaries.split('&')[0]}
-                      </span>
-                      <span className="text-emerald-700 font-bold">Select &rarr;</span>
-                    </div>
-                  </button>
-                );
-              })}
+                      <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
+                        <span className={`${isSelected ? 'text-teal-700 font-bold' : 'text-slate-500'}`}>
+                          {centre.beneficiaries.split('&')[0]}
+                        </span>
+                        <span className="text-emerald-700 font-bold">Select &rarr;</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Mobile-Only Dot Pagination Indicator */}
+              <div className="block md:hidden pt-1 pb-1">
+                <div className="flex items-center justify-center gap-2">
+                  {CENTRES.map((centre, index) => {
+                    const isActive = activeCarouselIndex === index;
+                    return (
+                      <button
+                        key={centre.id}
+                        type="button"
+                        onClick={() => {
+                          if (carouselRef.current) {
+                            const el = carouselRef.current.children[index] as HTMLElement;
+                            if (el) {
+                              el.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'center'
+                              });
+                            }
+                          }
+                          setSelectedCentreId(centre.id);
+                          setActiveCarouselIndex(index);
+                        }}
+                        aria-label={`Scroll to ${centre.name}`}
+                        className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
+                          isActive
+                            ? 'w-6 bg-teal-800'
+                            : 'w-2 bg-slate-300 hover:bg-slate-400'
+                        }`}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 

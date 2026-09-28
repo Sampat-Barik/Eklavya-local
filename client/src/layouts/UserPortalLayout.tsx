@@ -71,7 +71,7 @@ export const UserPortalLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F9FAFB] via-[#ECFDF5] to-[#F0FDF4] flex flex-col antialiased relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#FCFBF9] flex flex-col antialiased relative overflow-x-clip">
       {/* 5-Layer Botanical Background Orchestrator Wrapper */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none text-emerald-900/10">
         {/* Top Left */}
@@ -124,8 +124,8 @@ export const UserPortalLayout: React.FC = () => {
       <Navbar />
 
       {/* Secondary Horizontal Pill Bar for Portal Sub-navigation */}
-      <div className="flex justify-center mt-4 px-4 z-40 overflow-x-auto">
-        <div className="inline-flex items-center gap-1 bg-white/80 backdrop-blur-md border border-emerald-100/90 rounded-full p-1.5 shadow-sm max-w-full">
+      <div className="w-full max-w-full overflow-x-auto horizontal-scroll-container overscroll-x-contain px-4 mt-3 z-40 pb-1">
+        <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md border border-emerald-100/90 rounded-2xl sm:rounded-full p-1.5 shadow-sm min-w-max mx-auto justify-center">
           {navLinks.map((tab) => {
             const Icon = tab.icon;
             const active = tab.exact ? location.pathname === tab.path : location.pathname.startsWith(tab.path);
@@ -135,14 +135,14 @@ export const UserPortalLayout: React.FC = () => {
                 to={tab.path}
                 end={tab.exact}
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                  `min-h-[44px] flex items-center gap-2 px-4 py-2.5 rounded-xl sm:rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer touch-manipulation ${
                     isActive
                       ? 'bg-teal-800 text-white shadow-xs'
                       : 'text-slate-600 hover:text-teal-950 hover:bg-emerald-50/70'
                   }`
                 }
               >
-                <Icon size={13} className={active ? 'text-white' : 'text-emerald-700'} />
+                <Icon size={14} className={active ? 'text-white' : 'text-emerald-700'} />
                 <span>{tab.name}</span>
               </NavLink>
             );

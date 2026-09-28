@@ -39,35 +39,39 @@ export const StoriesSection: React.FC = () => {
 
       {/* Asymmetric 5:7 Stories Grid */}
       {stories.length >= 2 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+        <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-4 px-4 pb-4 md:grid md:grid-cols-1 lg:grid-cols-12 md:gap-6 sm:gap-8 md:px-0 md:pb-0 items-stretch">
           {/* Featured Story Spotlight (Left Column 5 cols) */}
-          <div className="lg:col-span-5 flex flex-col">
+          <div className="w-[80vw] shrink-0 snap-center md:w-auto md:shrink lg:col-span-5 flex flex-col">
             <PostCard
               story={stories[0]}
               onReadMore={(st) => setSelectedStory(st)}
-              className="h-full border border-slate-700/80 shadow-xl"
+              className="h-full border-emerald-100 md:border-slate-700/80 shadow-md md:shadow-xl"
             />
           </div>
 
           {/* Secondary Field Dispatches (Right Column 7 cols) */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+          <div className="contents md:grid lg:col-span-7 grid-cols-1 sm:grid-cols-2 md:gap-6 sm:gap-8 items-stretch">
             {stories.slice(1).map((story) => (
-              <PostCard
-                key={story._id}
-                story={story}
-                onReadMore={(st) => setSelectedStory(st)}
-              />
+              <div key={story._id} className="w-[80vw] shrink-0 snap-center md:w-auto md:shrink flex flex-col">
+                <PostCard
+                  story={story}
+                  onReadMore={(st) => setSelectedStory(st)}
+                  className="h-full"
+                />
+              </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+        <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-4 px-4 pb-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 sm:gap-8 md:px-0 md:pb-0 items-stretch">
           {stories.map((story) => (
-            <PostCard
-              key={story._id}
-              story={story}
-              onReadMore={(st) => setSelectedStory(st)}
-            />
+            <div key={story._id} className="w-[80vw] shrink-0 snap-center md:w-auto md:shrink flex flex-col">
+              <PostCard
+                story={story}
+                onReadMore={(st) => setSelectedStory(st)}
+                className="h-full"
+              />
+            </div>
           ))}
         </div>
       )}

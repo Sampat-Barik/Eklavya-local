@@ -205,9 +205,14 @@ export const PortalAttendance: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl overflow-hidden border border-emerald-100/90 shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+          <div className="bg-white rounded-2xl overflow-hidden border border-emerald-100/90 shadow-xs w-full max-w-full">
+            {/* Mobile Horizontal Scroll Indicator */}
+            <div className="sm:hidden px-4 py-2 bg-emerald-50/60 border-b border-emerald-100 text-[11px] text-teal-900 font-mono flex items-center justify-between font-bold">
+              <span>Swipe horizontally to view full records</span>
+              <span>⇄</span>
+            </div>
+            <div className="overflow-x-auto w-full max-w-full horizontal-scroll-container overscroll-x-contain pb-1">
+              <table className="w-full min-w-[720px] text-left text-xs">
                 <thead className="bg-slate-50/80 text-slate-600 border-b border-slate-200 font-bold uppercase text-[10px] tracking-wider">
                   <tr>
                     <th className="py-3.5 px-4">Date</th>

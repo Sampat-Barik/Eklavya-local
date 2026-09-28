@@ -53,55 +53,67 @@ export const ImpactStats: React.FC<ImpactStatsProps> = ({ metrics, className = '
     return () => ctx.revert();
   }, [metrics]);
 
-  const getIcon = (category: string) => {
+  const getCategoryStyles = (category: string) => {
     switch (category) {
       case 'education':
-        return <BookOpen size={14} className="text-blue-600" strokeWidth={1.75} />;
+        return {
+          iconBox: 'bg-blue-50/90 text-blue-600 border-blue-100/70',
+          icon: <BookOpen size={16} strokeWidth={1.8} />
+        };
       case 'animal':
-        return <Heart size={14} className="text-emerald-600" strokeWidth={1.75} />;
+        return {
+          iconBox: 'bg-emerald-50/90 text-emerald-600 border-emerald-100/70',
+          icon: <Heart size={16} strokeWidth={1.8} />
+        };
       default:
-        return <Users size={14} className="text-cyan-600" strokeWidth={1.75} />;
+        return {
+          iconBox: 'bg-cyan-50/90 text-cyan-600 border-cyan-100/70',
+          icon: <Users size={16} strokeWidth={1.8} />
+        };
     }
   };
 
   return (
-    <div ref={containerRef} className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${className}`}>
-      {metrics.map((metric, i) => (
-        <div
-          key={metric.id}
-          className="rounded-xl bg-white/90 backdrop-blur-md border border-slate-200 p-5 sm:p-6 flex flex-col justify-between hover:border-emerald-500/40 transition-colors shadow-md hover:shadow-lg group"
-        >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
-              {getIcon(metric.category)}
+    <div ref={containerRef} className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 ${className}`}>
+      {metrics.map((metric, i) => {
+        const { iconBox, icon } = getCategoryStyles(metric.category);
+        return (
+          <div
+            key={metric.id}
+            className="rounded-2xl bg-white/95 backdrop-blur-sm border border-slate-200/60 p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.03),0_0_1px_1px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_28px_-6px_rgba(15,23,42,0.07)] hover:border-slate-300/70 hover:-translate-y-1 group"
+          >
+            <div className="flex items-center justify-between gap-3 mb-5">
+              <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform group-hover:scale-105 duration-200 ${iconBox}`}>
+                {icon}
+              </div>
+              {metric.trend && (
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-normal text-emerald-700 bg-emerald-50/90 border border-emerald-200/60 px-2.5 py-1 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                  <TrendingUp size={11} className="text-emerald-600" />
+                  <span>{metric.trend}</span>
+                </span>
+              )}
             </div>
-            {metric.trend && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-semibold">
-                <TrendingUp size={10} className="text-emerald-600" />
-                <span>{metric.trend}</span>
-              </span>
-            )}
-          </div>
 
-          <div>
-            <div className="text-3xl sm:text-4xl font-serif font-extrabold text-slate-900 tracking-tight flex items-baseline">
-              <span
-                ref={(el) => {
-                  countersRef.current[i] = el;
-                }}
-              >
-                {metric.prefix}0{metric.suffix}
-              </span>
+            <div className="flex flex-col justify-between flex-grow">
+              <div className="text-3xl sm:text-4xl lg:text-[38px] font-serif font-extrabold text-slate-900 tracking-tight leading-none flex items-baseline">
+                <span
+                  ref={(el) => {
+                    countersRef.current[i] = el;
+                  }}
+                >
+                  {metric.prefix}0{metric.suffix}
+                </span>
+              </div>
+              <h4 className="font-semibold text-sm sm:text-[15px] text-slate-800 mt-2.5 leading-snug">
+                {metric.label}
+              </h4>
+              <p className="text-xs text-slate-500 mt-1.5 font-normal leading-relaxed">
+                {metric.sublabel}
+              </p>
             </div>
-            <h4 className="font-semibold text-xs sm:text-sm text-slate-800 mt-1.5 leading-snug">
-              {metric.label}
-            </h4>
-            <p className="text-xs text-slate-600 mt-1 font-normal leading-relaxed">
-              {metric.sublabel}
-            </p>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

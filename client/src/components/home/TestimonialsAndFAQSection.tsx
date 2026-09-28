@@ -21,7 +21,7 @@ interface FAQItem {
   id: string;
   question: string;
   answer: string;
-  category: 'Join Us' | 'Donations' | 'Operations';
+  category: 'Campus Intake' | 'Donations' | 'Operations';
 }
 
 export const TestimonialsAndFAQSection: React.FC = () => {
@@ -71,10 +71,10 @@ export const TestimonialsAndFAQSection: React.FC = () => {
   const faqs: FAQItem[] = [
     {
       id: 'f1',
-      question: 'How can HIT Haldia students join the Eklavya Society?',
+      question: 'How does the annual student recruitment and campus intake work?',
       answer:
-        'All enrolled undergraduate and postgraduate students at Haldia Institute of Technology can apply during our semester orientation events or register directly on our Portal. No prior experience is required—just dedication!',
-      category: 'Join Us',
+        'Undergraduate students at Haldia Institute of Technology can apply through our annual Campus Intake process. Membership is subject to our formal selection process, including written intent review and panel interviews by Domain Leads and the Faculty Advisor. Selected members undergo a 30-day ground orientation.',
+      category: 'Campus Intake',
     },
     {
       id: 'f2',
@@ -107,7 +107,7 @@ export const TestimonialsAndFAQSection: React.FC = () => {
   ];
 
   const [activeFaqId, setActiveFaqId] = useState<string>('f1');
-  const [selectedCategory, setSelectedCategory] = useState<'All' | 'Join Us' | 'Donations' | 'Operations'>('All');
+  const [selectedCategory, setSelectedCategory] = useState<'All' | 'Campus Intake' | 'Donations' | 'Operations'>('All');
 
   const filteredFaqs = faqs.filter(
     (item) => selectedCategory === 'All' || item.category === selectedCategory
@@ -136,12 +136,12 @@ export const TestimonialsAndFAQSection: React.FC = () => {
           </div>
         </div>
 
-        {/* 2x2 Testimonial Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* 2x2 Testimonial Cards Grid with Desktop Overlapping 3D Avatars & Mobile Soft Tint */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-8 md:gap-y-12 md:pt-6">
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="rounded-2xl bg-white/80 backdrop-blur-sm border border-emerald-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all duration-300 p-6 sm:p-7 flex flex-col justify-between space-y-4 group"
+              className="rounded-2xl bg-emerald-50/40 md:bg-white border border-emerald-200/60 md:border-slate-200/80 shadow-none md:shadow-md hover:border-emerald-400/60 md:hover:shadow-lg transition-all duration-300 p-6 md:p-7 relative overflow-visible flex flex-col justify-between space-y-4 group"
             >
               {/* Card Header: Avatar, Name, Stars & Role Badge */}
               <div className="flex items-start justify-between gap-4">
@@ -149,7 +149,7 @@ export const TestimonialsAndFAQSection: React.FC = () => {
                   <img
                     src={t.imageUrl}
                     alt={t.author}
-                    className="w-13 h-13 sm:w-14 sm:h-14 rounded-full object-cover shrink-0 border-2 border-emerald-100 shadow-xs"
+                    className="w-13 h-13 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full object-cover shrink-0 border-2 md:border-4 border-emerald-100 md:border-white shadow-xs md:shadow-lg mt-0 md:-mt-10 relative z-10 transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="min-w-0">
                     <h3 className="font-serif font-bold text-base sm:text-lg text-slate-900 leading-snug truncate">
@@ -176,8 +176,8 @@ export const TestimonialsAndFAQSection: React.FC = () => {
                 </div>
               </div>
 
-              {/* Quote */}
-              <p className="font-serif italic text-slate-700 text-xs sm:text-sm leading-relaxed pt-1">
+              {/* Quote with Clean Legible Sans Typography */}
+              <p className="font-sans text-slate-700 text-xs sm:text-sm leading-relaxed pt-1">
                 "{t.quote}"
               </p>
             </div>
@@ -206,7 +206,7 @@ export const TestimonialsAndFAQSection: React.FC = () => {
 
           {/* Filter Pills */}
           <div className="flex items-center gap-1.5 p-1 bg-white/70 border border-emerald-200/80 rounded-full shrink-0 self-start md:self-auto text-xs shadow-2xs">
-            {(['All', 'Join Us', 'Donations', 'Operations'] as const).map((cat) => (
+            {(['All', 'Campus Intake', 'Donations', 'Operations'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}

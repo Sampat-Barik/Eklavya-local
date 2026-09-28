@@ -115,9 +115,14 @@ export const PortalDonations: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div className="editorial-card overflow-hidden bg-white border-slate-200">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+          <div className="editorial-card overflow-hidden bg-white border-slate-200 w-full max-w-full">
+            {/* Mobile Horizontal Scroll Indicator */}
+            <div className="sm:hidden px-4 py-2 bg-slate-50 border-b border-slate-100 text-[11px] text-slate-700 font-mono flex items-center justify-between font-bold">
+              <span>Swipe horizontally to view all columns</span>
+              <span>⇄</span>
+            </div>
+            <div className="overflow-x-auto w-full max-w-full horizontal-scroll-container overscroll-x-contain pb-1">
+              <table className="w-full min-w-[620px] text-left text-xs">
                 <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-bold uppercase text-[10px]">
                   <tr>
                     <th className="py-3.5 px-4">Date</th>
@@ -148,9 +153,9 @@ export const PortalDonations: React.FC = () => {
                       <td className="py-3.5 px-4 text-right">
                         <button
                           onClick={() => alert(`Downloading formal donation acknowledgement receipt for UTR: ${don.utrNumber}`)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                          className="min-h-[44px] inline-flex items-center justify-end gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline px-2 cursor-pointer"
                         >
-                          <Download size={12} />
+                          <Download size={14} />
                           <span>Receipt PDF</span>
                         </button>
                       </td>

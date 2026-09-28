@@ -259,30 +259,30 @@ export const DomainTaskHub: React.FC = () => {
             </div>
             <div className="space-y-1.5">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <span className={`px-3 py-0.5 rounded-full text-xs font-bold border ${domainMeta.tagColor}`}>
+                <span className="px-3 py-0.5 rounded-full text-xs font-bold border border-white/40 bg-white/20 text-white backdrop-blur-sm shadow-xs">
                   {domainMeta.name} Wing
                 </span>
                 {roleLevel === 3 && (
-                  <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-400/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                    <Zap size={11} /> You are Domain Lead (Level 3)
+                  <span className="bg-white/20 text-white border border-white/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 backdrop-blur-sm shadow-xs">
+                    <Zap size={11} className="text-white" /> You are Domain Lead (Level 3)
                   </span>
                 )}
                 {roleLevel === 4 && (
-                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                    <User size={11} /> You are Club Member (Level 4)
+                  <span className="bg-white/20 text-white border border-white/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 backdrop-blur-sm shadow-xs">
+                    <User size={11} className="text-white" /> You are Club Member (Level 4)
                   </span>
                 )}
                 {isGlobalAdmin && (
-                  <span className="bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                    <Shield size={11} /> Administrator Oversight (Level {roleLevel})
+                  <span className="bg-white/20 text-white border border-white/40 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 backdrop-blur-sm shadow-xs">
+                    <Shield size={11} className="text-white" /> Administrator Oversight (Level {roleLevel})
                   </span>
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white drop-shadow-xs">
                 {domainMeta.name} Management Hub
               </h1>
-              <p className="text-xs sm:text-sm text-teal-100/80 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/95 max-w-2xl leading-relaxed font-medium">
                 {domainMeta.shortDesc}
               </p>
             </div>
@@ -292,16 +292,16 @@ export const DomainTaskHub: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {isGlobalAdmin && (
               <div className="bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20">
-                <label className="text-[10px] text-teal-200 font-bold uppercase tracking-wider block mb-1">
+                <label className="text-[10px] text-white font-bold uppercase tracking-wider block mb-1">
                   Switch Overseen Domain
                 </label>
                 <select
                   value={selectedDomain}
                   onChange={(e) => setSelectedDomain(e.target.value as ClubDomain)}
-                  className="bg-slate-900 text-teal-300 text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none border border-teal-700/60 cursor-pointer w-full"
+                  className="bg-slate-900 text-white text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none border border-white/30 cursor-pointer w-full"
                 >
                   {OFFICIAL_DOMAINS.map((dom) => (
-                    <option key={dom.key} value={dom.key}>
+                    <option key={dom.key} value={dom.key} className="text-white bg-slate-900">
                       {dom.name} Wing
                     </option>
                   ))}
@@ -312,41 +312,41 @@ export const DomainTaskHub: React.FC = () => {
             {canCreate ? (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="px-5 py-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105"
+                className="px-5 py-3 rounded-2xl bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105"
               >
                 <Plus size={16} />
                 <span>Assign Task to Member</span>
               </button>
             ) : (
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs text-teal-200/80">
+              <div className="bg-white/10 border border-white/20 rounded-2xl p-3 text-xs text-white">
                 <span className="font-bold block text-white">Member Task View</span>
-                <span>Assigned tasks appear below.</span>
+                <span className="text-white/90">Assigned tasks appear below.</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-6 border-t border-teal-800/60 text-center">
-          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-6 border-t border-white/20 text-center">
+          <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
             <span className="text-xl font-black text-white">{stats.total}</span>
-            <span className="text-[10px] text-teal-200/70 block uppercase font-semibold">Total Tasks</span>
+            <span className="text-[10px] text-white/90 block uppercase font-bold tracking-wide">Total Tasks</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-sm">
-            <span className="text-xl font-black text-sky-400">{stats.inProgress}</span>
-            <span className="text-[10px] text-teal-200/70 block uppercase font-semibold">In Progress</span>
+          <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+            <span className="text-xl font-black text-white">{stats.inProgress}</span>
+            <span className="text-[10px] text-white/90 block uppercase font-bold tracking-wide">In Progress</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-sm">
-            <span className="text-xl font-black text-amber-400">{stats.pending}</span>
-            <span className="text-[10px] text-teal-200/70 block uppercase font-semibold">Pending</span>
+          <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+            <span className="text-xl font-black text-white">{stats.pending}</span>
+            <span className="text-[10px] text-white/90 block uppercase font-bold tracking-wide">Pending</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-sm">
-            <span className="text-xl font-black text-purple-400">{stats.submitted}</span>
-            <span className="text-[10px] text-teal-200/70 block uppercase font-semibold">In Review</span>
+          <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+            <span className="text-xl font-black text-white">{stats.submitted}</span>
+            <span className="text-[10px] text-white/90 block uppercase font-bold tracking-wide">In Review</span>
           </div>
-          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-sm col-span-2 sm:col-span-1">
-            <span className="text-xl font-black text-emerald-400">{stats.completed}</span>
-            <span className="text-[10px] text-teal-200/70 block uppercase font-semibold">Completed</span>
+          <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 col-span-2 sm:col-span-1">
+            <span className="text-xl font-black text-white">{stats.completed}</span>
+            <span className="text-[10px] text-white/90 block uppercase font-bold tracking-wide">Completed</span>
           </div>
         </div>
       </div>
@@ -389,9 +389,9 @@ export const DomainTaskHub: React.FC = () => {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <div className="flex items-center gap-2 overflow-x-auto horizontal-scroll-container overscroll-x-contain pb-1 max-w-full">
             {[
-              { id: 'all', label: 'All' },
+              { id: 'all', label: 'All Tasks' },
               { id: 'in_progress', label: 'In Progress' },
               { id: 'pending', label: 'Pending' },
               { id: 'submitted', label: 'Submitted' },
@@ -400,10 +400,10 @@ export const DomainTaskHub: React.FC = () => {
               <button
                 key={f.id}
                 onClick={() => setStatusFilter(f.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                className={`min-h-[44px] px-4 py-2.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer touch-manipulation inline-flex items-center justify-center ${
                   statusFilter === f.id
                     ? 'bg-teal-800 text-white shadow-xs'
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                 }`}
               >
                 {f.label}

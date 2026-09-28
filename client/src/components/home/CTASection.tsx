@@ -180,7 +180,7 @@ export const CTASection: React.FC = () => {
             {/* Direct Link to Donate Page with selected amount */}
             <Link
               to={`/donate?amount=${selectedTier}&frequency=${frequency}`}
-              className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 transition-transform hover:scale-102"
+              className="w-full py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-blue-600/30 transition-transform hover:scale-102"
             >
               <Heart size={16} className="fill-current text-white" />
               <span>Proceed with ₹{selectedTier} {frequency === 'monthly' ? '/ month' : ''}</span>

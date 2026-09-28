@@ -555,9 +555,14 @@ export const AccessManagement: React.FC = () => {
             <span className="text-xs text-slate-500 font-medium">{auditLogs.length} total entries</span>
           </div>
 
-          <div className="editorial-card overflow-hidden border-slate-200 bg-white">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+          <div className="editorial-card overflow-hidden border-slate-200 bg-white w-full max-w-full">
+            {/* Mobile Horizontal Scroll Indicator */}
+            <div className="sm:hidden px-4 py-2 bg-slate-50 border-b border-slate-100 text-[11px] text-slate-700 font-mono flex items-center justify-between font-bold">
+              <span>Swipe horizontally to view full security audit trail</span>
+              <span>⇄</span>
+            </div>
+            <div className="overflow-x-auto w-full max-w-full horizontal-scroll-container overscroll-x-contain pb-1">
+              <table className="w-full min-w-[650px] text-left text-xs">
                 <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 font-bold uppercase text-[10px]">
                   <tr>
                     <th className="py-3 px-4">Timestamp</th>

@@ -28,12 +28,12 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className = '' }) =
 
   return (
     <div
-      className={`rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border border-slate-200 bg-white/90 backdrop-blur-md hover:border-emerald-500/40 transition-colors shadow-md ${className}`}
+      className={`rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border border-emerald-100 md:border-slate-200 bg-white/90 backdrop-blur-md shadow-md active:scale-[0.98] md:active:scale-100 md:hover:border-emerald-500/40 md:hover:shadow-lg md:hover:-translate-y-1 transition-all duration-300 ease-out group ${className}`}
     >
       {/* Date Stamp + Details */}
       <div className="flex items-start sm:items-center gap-4 flex-1">
         {/* Date Stamp */}
-        <div className="w-14 h-16 rounded-xl bg-emerald-50/60 border border-emerald-100 text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-2xs">
+        <div className="w-14 h-16 rounded-xl bg-emerald-50/60 border border-emerald-100 text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-2xs transition-transform duration-500 ease-out md:group-hover:scale-105">
           <span className="text-[9px] font-mono font-bold tracking-wider uppercase text-teal-800">
             {monthStr}
           </span>
@@ -91,10 +91,10 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className = '' }) =
         {event.isUpcoming ? (
           <button
             onClick={handleRsvp}
-            className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
+            className={`w-full sm:w-auto px-4 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95 ${
               hasRsvpd
                 ? 'bg-emerald-700 text-white font-bold'
-                : 'bg-gradient-to-r from-teal-800 to-emerald-600 hover:from-teal-700 hover:to-emerald-500 text-white'
+                : 'bg-gradient-to-r from-teal-800 to-emerald-600 md:hover:from-teal-700 md:hover:to-emerald-500 text-white'
             }`}
           >
             {hasRsvpd ? (

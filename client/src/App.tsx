@@ -22,6 +22,8 @@ const Events = lazy(() => import('./pages/Events').then((m) => ({ default: m.Eve
 const Donate = lazy(() => import('./pages/Donate').then((m) => ({ default: m.Donate })));
 const Login = lazy(() => import('./pages/Login').then((m) => ({ default: m.Login })));
 const Register = lazy(() => import('./pages/Register').then((m) => ({ default: m.Register })));
+const CampusIntake = lazy(() => import('./pages/CampusIntake').then((m) => ({ default: m.CampusIntake })));
+const CorporatePartnerships = lazy(() => import('./pages/CorporatePartnerships').then((m) => ({ default: m.CorporatePartnerships })));
 const AccessDenied = lazy(() => import('./pages/AccessDenied').then((m) => ({ default: m.AccessDenied })));
 
 // User Portal Pages (Lazy Loaded)
@@ -76,6 +78,12 @@ function App() {
           <Route path="/help-us" element={<Donate />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/recruitment" element={<CampusIntake />} />
+          <Route path="/campus-intake" element={<CampusIntake />} />
+          <Route path="/apply" element={<CampusIntake />} />
+          <Route path="/corporate-partnerships" element={<CorporatePartnerships />} />
+          <Route path="/csr" element={<CorporatePartnerships />} />
+          <Route path="/partnerships" element={<CorporatePartnerships />} />
 
           {/* Club Member Layer (Redirect to dedicated /portal/profile) */}
           <Route path="/profile" element={<Navigate to="/portal/profile" replace />} />

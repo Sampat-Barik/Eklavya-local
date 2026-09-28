@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useDonationModal } from '../context/DonationModalContext';
 import {
   ChevronDown,
   Compass,
@@ -19,7 +20,8 @@ import {
   Globe,
   Calendar,
   Award,
-  Megaphone
+  Megaphone,
+  Briefcase
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { OFFICIAL_DOMAINS } from '../types/auth';
@@ -34,6 +36,7 @@ interface SubmenuItem {
 
 export const Navbar: React.FC = () => {
   const { isAuthenticated, roleLevel, userDomain, user, logout } = useAuth();
+  const { openDonationModal } = useDonationModal();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -132,6 +135,18 @@ export const Navbar: React.FC = () => {
       description: 'Former campus leaders continuing the legacy',
       href: '/alumni',
       icon: Sparkles,
+    },
+    {
+      name: 'Campus Intake & Recruitment',
+      description: 'Annual student selection process & intake form',
+      href: '/recruitment',
+      icon: GraduationCap,
+    },
+    {
+      name: 'Corporate Partnerships (CSR)',
+      description: 'Schedule VII alignment, grants & corporate MoUs',
+      href: '/corporate-partnerships',
+      icon: Briefcase,
     },
   ];
 
@@ -277,14 +292,10 @@ export const Navbar: React.FC = () => {
   return (
     <header
       ref={navRef}
-      className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        isScrolled
-          ? 'bg-white/90 backdrop-blur-md border-b border-emerald-100 shadow-sm py-2.5'
-          : 'bg-white/80 backdrop-blur-md border-b border-emerald-100/70 py-3'
+      className={`sticky top-0 z-50 w-full bg-[#FCFBF9]/85 backdrop-blur-md border-b border-slate-200/60 transition-all duration-200 ${
+        isScrolled ? 'py-2.5 shadow-xs' : 'py-3'
       }`}
     >
-      {/* Seamless bottom blur transition */}
-      <div className="pointer-events-none absolute -bottom-4 left-0 right-0 h-4 bg-gradient-to-b from-white/30 to-transparent backdrop-blur-[2px]" />
 
       <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Left: Brand Identity & Compact Status */}
@@ -489,16 +500,18 @@ export const Navbar: React.FC = () => {
           </div>
         </nav>
 
-        {/* Right: Help Us Button & Auth / Portal Controls */}
+        {/* Right: Static Donate Button & Auth / Portal Controls */}
         <div className="hidden md:flex items-center gap-2.5">
-          {/* Top Right "Help Us" Action Button */}
-          <Link
-            to="/help-us"
-            className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all group"
+          {/* Static, Highly Visible "Donate" Action Button */}
+          <button
+            type="button"
+            onClick={() => openDonationModal()}
+            className="flex items-center gap-1.5 text-xs font-black px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white shadow-md shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer group"
+            title="Donate to support Eklavya social welfare and animal rescue"
           >
-            <Heart size={14} className="text-white fill-current group-hover:scale-110 transition-transform" />
-            <span>Help Us</span>
-          </Link>
+            <Heart size={14} className="text-white fill-current group-hover:scale-125 transition-transform" />
+            <span>Donate</span>
+          </button>
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
@@ -584,25 +597,36 @@ export const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-slate-800 hover:bg-emerald-50 rounded-full focus:outline-none"
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile: Pinned Donate Button & Menu Toggle */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openDonationModal()}
+            className="flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-500/30 active:scale-95 transition-all cursor-pointer"
+          >
+            <Heart size={13} className="text-white fill-current" />
+            <span>Donate</span>
+          </button>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-slate-800 hover:bg-emerald-50 rounded-full focus:outline-none"
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Drawer with Accordion Submenus */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-2 max-w-[1400px] mx-auto bg-white/95 backdrop-blur-xl border border-emerald-100 rounded-2xl p-4 space-y-2 text-sm font-semibold shadow-2xl animate-fadeIn">
+        <div className="md:hidden mt-2 max-w-[1400px] mx-auto max-h-screen overflow-y-auto bg-white/95 backdrop-blur-xl border border-emerald-100 rounded-2xl p-4 space-y-2 text-sm font-semibold shadow-2xl animate-fadeIn">
           {/* 1. Home */}
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3.5 py-2 rounded-xl transition-colors ${
+            className={`min-h-[48px] flex items-center px-4 py-2.5 rounded-xl transition-colors ${
               location.pathname === '/' ? 'bg-emerald-50 text-teal-800 font-bold' : 'hover:bg-emerald-50/60 text-slate-800'
             }`}
           >
@@ -613,11 +637,11 @@ export const Navbar: React.FC = () => {
           <div className="border border-emerald-100 rounded-xl overflow-hidden">
             <button
               onClick={() => toggleMobileAccordion('about')}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-emerald-50/50 text-slate-800 text-left"
+              className="w-full min-h-[48px] flex items-center justify-between px-4 py-2.5 bg-emerald-50/50 text-slate-800 text-left cursor-pointer"
             >
               <span>About</span>
               <ChevronDown
-                size={15}
+                size={16}
                 className={`transition-transform duration-200 ${
                   mobileAccordion === 'about' ? 'rotate-180 text-teal-700' : 'text-slate-400'
                 }`}
@@ -630,7 +654,7 @@ export const Navbar: React.FC = () => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-teal-800 hover:bg-emerald-50/70 rounded-lg"
+                    className="min-h-[48px] flex items-center px-3.5 py-3 text-base text-slate-600 hover:text-teal-800 hover:bg-emerald-50/70 rounded-lg transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -643,7 +667,7 @@ export const Navbar: React.FC = () => {
           <Link
             to="/our-work"
             onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3.5 py-2 rounded-xl transition-colors ${
+            className={`min-h-[48px] flex items-center px-4 py-2.5 rounded-xl transition-colors ${
               ['/our-work', '/work', '/programs'].includes(location.pathname)
                 ? 'bg-emerald-50 text-teal-800 font-bold'
                 : 'hover:bg-emerald-50/60 text-slate-800'
@@ -656,7 +680,7 @@ export const Navbar: React.FC = () => {
           <Link
             to="/events"
             onClick={() => setMobileMenuOpen(false)}
-            className={`block px-3.5 py-2 rounded-xl transition-colors ${
+            className={`min-h-[48px] flex items-center px-4 py-2.5 rounded-xl transition-colors ${
               location.pathname === '/events' ? 'bg-emerald-50 text-teal-800 font-bold' : 'hover:bg-emerald-50/60 text-slate-800'
             }`}
           >
@@ -667,11 +691,11 @@ export const Navbar: React.FC = () => {
           <div className="border border-emerald-100 rounded-xl overflow-hidden">
             <button
               onClick={() => toggleMobileAccordion('portal')}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 bg-emerald-50/50 text-slate-800 text-left"
+              className="w-full min-h-[48px] flex items-center justify-between px-4 py-2.5 bg-emerald-50/50 text-slate-800 text-left cursor-pointer"
             >
               <span>{roleLevel === 5 ? 'Get Involved' : 'Portal'}</span>
               <ChevronDown
-                size={15}
+                size={16}
                 className={`transition-transform duration-200 ${
                   mobileAccordion === 'portal' ? 'rotate-180 text-teal-700' : 'text-slate-400'
                 }`}
@@ -684,7 +708,7 @@ export const Navbar: React.FC = () => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-teal-800 hover:bg-emerald-50/70 rounded-lg"
+                    className="min-h-[48px] flex items-center px-3.5 py-3 text-base text-slate-600 hover:text-teal-800 hover:bg-emerald-50/70 rounded-lg transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -693,20 +717,25 @@ export const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* 6. Mobile Help Us Action Button */}
-          <Link
-            to="/help-us"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20"
-          >
-            <Heart size={15} className="text-white fill-current" />
-            <span>Help Us — Donate & Support</span>
-          </Link>
+          {/* 6. Mobile Donate Action Button */}
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openDonationModal();
+              }}
+              className="w-full h-[48px] flex items-center justify-center gap-2 px-4 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-black text-sm shadow-md shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
+            >
+              <Heart size={16} className="text-white fill-current" />
+              <span>Donate Now</span>
+            </button>
+          </div>
 
           {/* Bottom Auth Link */}
           <div className="pt-2 border-t border-emerald-100">
             {isAuthenticated ? (
-              <div className="flex items-center justify-between px-3.5 py-2 bg-emerald-50/50 rounded-xl">
+              <div className="min-h-[48px] flex items-center justify-between px-3.5 py-2 bg-emerald-50/50 rounded-xl">
                 <span className="text-xs text-slate-600">
                   Signed in as <strong className="text-teal-950">{user?.name}</strong>
                 </span>
@@ -715,7 +744,7 @@ export const Navbar: React.FC = () => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="text-xs text-rose-600 font-bold hover:underline"
+                  className="min-h-[48px] min-w-[48px] flex items-center justify-center text-xs text-rose-600 font-bold hover:underline cursor-pointer"
                 >
                   Logout
                 </button>
@@ -724,9 +753,9 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-center py-2 text-xs font-bold text-teal-900 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors"
+                className="w-full min-h-[48px] flex items-center justify-center py-2.5 px-4 text-xs font-bold text-teal-900 bg-emerald-50 hover:bg-emerald-100 rounded-xl transition-colors"
               >
-                Sign In
+                Sign In to Member Portal
               </Link>
             )}
           </div>

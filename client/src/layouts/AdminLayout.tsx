@@ -101,9 +101,9 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F9FAFB] via-[#ECFDF5]/30 to-[#F0FDF4]/50 flex antialiased text-slate-800 selection:bg-teal-700 selection:text-white">
+    <div className="min-h-screen bg-[#FCFBF9] flex antialiased text-slate-800 selection:bg-teal-700 selection:text-white">
       {/* Mobile Top Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 px-4 py-3 flex items-center justify-between shadow-xs">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#FCFBF9]/85 backdrop-blur-md border-b border-slate-200/60 px-4 py-3 flex items-center justify-between shadow-xs">
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="relative w-8 h-8 rounded-full p-[2px] bg-gradient-to-r from-teal-700 to-emerald-500 shadow-sm flex items-center justify-center">
             <div className="w-full h-full rounded-full bg-white flex items-center justify-center p-0.5">

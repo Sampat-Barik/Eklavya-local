@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   User as UserIcon,
@@ -10,7 +11,13 @@ import {
   Camera,
   ShieldCheck,
   Send,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  ArrowRight,
+  FileText,
+  Layers,
+  Award,
+  CheckCircle
 } from 'lucide-react';
 import type { UserRole } from '../../types/auth';
 
@@ -28,7 +35,13 @@ const departments = [
 ];
 
 export const PortalProfile: React.FC = () => {
-  const { user, updateProfile, requestAdminAccess } = useAuth();
+  const { user, roleLevel, updateProfile, requestAdminAccess } = useAuth();
+
+  const isLevel5NormalUser =
+    roleLevel === 5 ||
+    user?.role === 'public_user' ||
+    !user?.isActiveMember ||
+    user?.roleLevel === 5;
 
   const [displayName, setDisplayName] = useState(user?.name || '');
   const [department, setDepartment] = useState(user?.department || '');
@@ -123,6 +136,110 @@ export const PortalProfile: React.FC = () => {
         </div>
       )}
 
+      {/* Level 5 Normal User: High-Impact Campus Intake CTA Card */}
+      {isLevel5NormalUser && (
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-950 via-slate-900 to-emerald-950 border border-emerald-500/30 p-6 sm:p-8 shadow-2xl text-white">
+          {/* Ambient Glows */}
+          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-teal-400/15 blur-3xl pointer-events-none" />
+
+          {/* Background Watermark */}
+          <div className="absolute right-4 -bottom-6 opacity-[0.03] select-none pointer-events-none font-serif font-black text-8xl md:text-9xl tracking-tighter">
+            EKLAVYA
+          </div>
+
+          <div className="relative z-10 space-y-5">
+            {/* Top Badge & Tier Label */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 text-xs font-black uppercase tracking-wider backdrop-blur-md shadow-inner">
+                <Sparkles size={14} className="text-emerald-300 animate-pulse" />
+                <span>Level 5 Normal User • Campus Intake Cycle Open</span>
+              </div>
+
+              <span className="text-[11px] font-mono text-teal-300/80 bg-teal-900/50 border border-teal-700/40 px-2.5 py-1 rounded-lg">
+                Annual Induction 2026–27
+              </span>
+            </div>
+
+            {/* Hero Title & Subtext */}
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white leading-tight">
+                Step Up to an <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200">Active Eklavya Member</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-teal-100/90 leading-relaxed max-w-2xl font-normal">
+                You are currently registered as a public supporter (Level 5 Normal User). Inducted active membership unlocks our 8 specialized club departments, hands-on social drives, official volunteer duty passes, and leadership opportunities.
+              </p>
+            </div>
+
+            {/* 3 Domain Quick Perks */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+              <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center shrink-0">
+                  <Layers size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">8 Club Domains</div>
+                  <div className="text-[10px] text-teal-200/70">Video, Teaching, PR & more</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                  <Award size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">Official Verification</div>
+                  <div className="text-[10px] text-emerald-200/70">Induction seals & honors</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                  <CheckCircle size={16} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">Field Responsibility</div>
+                  <div className="text-[10px] text-amber-200/70">Lead ground initiatives</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mandatory Annual Selection Process Notice */}
+            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-amber-500/10 border border-amber-400/25 text-amber-200 text-xs font-medium">
+              <AlertCircle size={16} className="text-amber-400 shrink-0 mt-0.5" />
+              <span>
+                <strong>Selection Process Notice:</strong> Membership is not granted automatically upon registration. All candidate inductions are subject to the annual selection process and screening interview by the executive council.
+              </span>
+            </div>
+
+            {/* Really Attractive Button & Action Links */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <Link
+                to="/recruitment"
+                className="relative group inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-emerald-400 to-teal-300 hover:from-amber-300 hover:via-emerald-300 hover:to-teal-200 text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 overflow-hidden"
+              >
+                {/* Shimmer light bar across button */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+                
+                <div className="w-8 h-8 rounded-xl bg-slate-950/10 flex items-center justify-center">
+                  <GraduationCap size={18} className="text-slate-950 group-hover:rotate-12 transition-transform duration-200" />
+                </div>
+                <span>Apply for Campus Intake</span>
+                <ArrowRight size={17} className="text-slate-950 group-hover:translate-x-1.5 transition-transform duration-200" />
+              </Link>
+
+              <Link
+                to="/recruitment?tab=status"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 hover:border-white/40 text-white text-xs font-bold backdrop-blur-md transition-all duration-150"
+              >
+                <FileText size={15} className="text-teal-300" />
+                <span>Check Application / Waitlist</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Profile Form Card */}
       <form onSubmit={handleSaveProfile} className="editorial-card p-6 sm:p-8 bg-white space-y-8">
         {/* Avatar & Read-only Account Identity */}
@@ -151,9 +268,15 @@ export const PortalProfile: React.FC = () => {
           <div className="space-y-1.5 text-center sm:text-left flex-1">
             <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
               <h2 className="text-xl font-bold text-slate-900">{displayName || user.name}</h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-extrabold uppercase tracking-wide">
-                {user.role === 'registered_user' ? 'Member' : user.role.replace('_', ' ')}
-              </span>
+              {isLevel5NormalUser ? (
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-extrabold uppercase tracking-wide">
+                  Level 5 • Normal User (Non-Member)
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-extrabold uppercase tracking-wide">
+                  {user.role === 'registered_user' ? 'Member' : user.role.replace('_', ' ')}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-2 text-xs text-slate-500 font-medium">
               <Mail size={13} className="text-slate-400" />
@@ -245,8 +368,8 @@ export const PortalProfile: React.FC = () => {
         </div>
       </form>
 
-      {/* Admin Access Request Card */}
-      {user.role === 'registered_user' && (
+      {/* Admin Access Request Card (Only for Inducted Club Members) */}
+      {!isLevel5NormalUser && user.role === 'registered_user' && (
         <div className="editorial-card p-6 bg-gradient-to-r from-slate-50 to-blue-50/30 border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
