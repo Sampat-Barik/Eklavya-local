@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import { IntroHero } from '../components/home/IntroHero';
 import { Hero } from '../components/home/Hero';
 import { LiveOperationsTicker } from '../components/home/LiveOperationsTicker';
 import { LiveOperationsMap } from '../components/home/LiveOperationsMap';
@@ -51,7 +52,9 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <div ref={mainRef} className="max-w-[1720px] 2xl:max-w-[1800px] w-full mx-auto px-6 sm:px-10 lg:px-16 space-y-24 sm:space-y-32 py-6 pb-28">
+    <>
+      <IntroHero />
+      <div id="main-content" ref={mainRef} className="max-w-[1720px] 2xl:max-w-[1800px] w-full mx-auto px-6 sm:px-10 lg:px-16 space-y-24 sm:space-y-32 py-6 pb-28">
       {/* 1. Open Asymmetrical Hero with 3D Scene */}
       <div className="gsap-reveal-section">
         <Hero />
@@ -91,6 +94,7 @@ export const Home: React.FC = () => {
       <div id="contact" className="gsap-reveal-section scroll-mt-24">
         <CommunityLowerSection />
       </div>
-    </div>
+      </div>
+    </>
   );
 };

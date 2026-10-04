@@ -41,6 +41,12 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isIntroVisible, setIsIntroVisible] = useState(() => {
+    if (typeof window !== 'undefined' && location.pathname === '/' && window.scrollY < 200) {
+      return true;
+    }
+    return false;
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
@@ -58,6 +64,46 @@ export const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // IntroHero visibility detection via IntersectionObserver
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setIsIntroVisible(false);
+      return;
+    }
+
+    let observer: IntersectionObserver | null = null;
+    let rafId: number | null = null;
+
+    const attachObserver = () => {
+      const heroElement = document.getElementById('intro-hero');
+      if (!heroElement) {
+        rafId = requestAnimationFrame(attachObserver);
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsIntroVisible(entry.isIntersecting);
+        },
+        {
+          root: null,
+          // Switch when IntroHero has meaningfully scrolled under/past the sticky navbar (~72px)
+          rootMargin: '-72px 0px 0px 0px',
+          threshold: 0,
+        }
+      );
+
+      observer.observe(heroElement);
+    };
+
+    attachObserver();
+
+    return () => {
+      if (observer) observer.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [location.pathname]);
 
   // Dropdown hover with smooth grace period
   const handleMouseEnter = (name: string) => {
@@ -289,39 +335,61 @@ export const Navbar: React.FC = () => {
     setMobileAccordion((prev) => (prev === name ? null : name));
   };
 
+  const isDark = isIntroVisible;
+
   return (
     <header
       ref={navRef}
-      className={`sticky top-0 z-50 w-full bg-[#FCFBF9]/85 backdrop-blur-md border-b border-slate-200/60 transition-all duration-200 ${
-        isScrolled ? 'py-2.5 shadow-xs' : 'py-3'
-      }`}
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        isDark
+          ? 'bg-black/25 backdrop-blur-md border-b border-white/10 shadow-none'
+          : `bg-[#FCFBF9]/90 backdrop-blur-md border-b border-slate-200/60 ${isScrolled ? 'shadow-xs' : ''}`
+      } ${isScrolled ? 'py-2.5' : 'py-3'}`}
     >
 
       <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Left: Brand Identity & Compact Status */}
         <div className="flex items-center gap-3.5 sm:gap-4">
           <Link to="/" className="flex items-center gap-2.5 group focus:outline-none">
-            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center p-0.5 group-hover:scale-105 transition-transform bg-gradient-to-r from-teal-700 to-emerald-500 p-[2px] shadow-sm">
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center p-1">
+            <div className={`relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center p-0.5 group-hover:scale-105 transition-all duration-300 ${
+              isDark
+                ? 'bg-white/20 border border-white/30 shadow-none'
+                : 'bg-gradient-to-r from-teal-700 to-emerald-500 p-[2px] shadow-sm'
+            }`}>
+              <div className={`w-full h-full rounded-full flex items-center justify-center p-1 transition-colors duration-300 ${
+                isDark ? 'bg-white/10 backdrop-blur-xs' : 'bg-white'
+              }`}>
                 <img
                   src="/eklavya_logo.png"
                   alt="Eklavya Emblem"
-                  className="w-full h-full object-contain"
+                  className={`w-full h-full object-contain transition-all duration-300 ${
+                    isDark ? 'brightness-0 invert opacity-95' : 'filter-none'
+                  }`}
                 />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-serif font-black text-lg text-teal-950 tracking-tight leading-none group-hover:text-teal-700 transition-colors">
+              <span className={`font-serif font-black text-lg tracking-tight leading-none transition-colors duration-300 ${
+                isDark
+                  ? 'text-white group-hover:text-emerald-300'
+                  : 'text-teal-950 group-hover:text-teal-700'
+              }`}>
                 Eklavya
               </span>
-              <span className="text-[10px] font-bold text-teal-700 tracking-wider uppercase mt-0.5">
+              <span className={`text-[10px] font-bold tracking-wider uppercase mt-0.5 transition-colors duration-300 ${
+                isDark ? 'text-white/70' : 'text-teal-700'
+              }`}>
                 Hands That Care • HIT Haldia
               </span>
             </div>
           </Link>
 
           {/* Compact Live Status Indicator */}
-          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] font-bold text-emerald-800 shadow-2xs">
+          <div className={`hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all duration-300 ${
+            isDark
+              ? 'bg-white/10 border border-white/20 text-white/90 shadow-none'
+              : 'bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-2xs'
+          }`}>
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
@@ -331,14 +399,18 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Center: Desktop Navigation with Accessible Dropdowns */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 text-xs font-semibold text-slate-700">
+        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 text-xs font-semibold">
           {/* 1. Standalone Home Link */}
           <Link
             to="/"
-            className={`px-3.5 py-1.5 rounded-full transition-all ${
-              location.pathname === '/'
-                ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
-                : 'hover:text-teal-800 hover:bg-emerald-50/70'
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              isDark
+                ? location.pathname === '/'
+                  ? 'text-white font-bold bg-white/20 border border-white/30 shadow-none'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                : location.pathname === '/'
+                  ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
+                  : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/70'
             }`}
           >
             Home
@@ -354,18 +426,23 @@ export const Navbar: React.FC = () => {
               onClick={() => toggleDropdown('about')}
               aria-expanded={openDropdown === 'about'}
               aria-haspopup="true"
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all focus:outline-none cursor-pointer ${
-                ['/vision', '/faculty', '/members', '/alumni'].includes(location.pathname) ||
-                openDropdown === 'about'
-                  ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
-                  : 'hover:text-teal-800 hover:bg-emerald-50/70'
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all duration-200 focus:outline-none cursor-pointer ${
+                isDark
+                  ? ['/vision', '/faculty', '/members', '/alumni'].includes(location.pathname) || openDropdown === 'about'
+                    ? 'text-white font-bold bg-white/20 border border-white/30 shadow-none'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                  : ['/vision', '/faculty', '/members', '/alumni'].includes(location.pathname) || openDropdown === 'about'
+                    ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
+                    : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/70'
               }`}
             >
               <span>About</span>
               <ChevronDown
                 size={13}
                 className={`transition-transform duration-200 ${
-                  openDropdown === 'about' ? 'rotate-180 text-teal-700' : 'text-slate-400'
+                  openDropdown === 'about'
+                    ? isDark ? 'rotate-180 text-white' : 'rotate-180 text-teal-700'
+                    : isDark ? 'text-white/70' : 'text-slate-400'
                 }`}
               />
             </button>
@@ -412,10 +489,14 @@ export const Navbar: React.FC = () => {
           {/* 3. Our Work Tab */}
           <Link
             to="/our-work"
-            className={`px-3.5 py-1.5 rounded-full transition-all ${
-              ['/our-work', '/work', '/programs'].includes(location.pathname)
-                ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
-                : 'hover:text-teal-800 hover:bg-emerald-50/70'
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              isDark
+                ? ['/our-work', '/work', '/programs'].includes(location.pathname)
+                  ? 'text-white font-bold bg-white/20 border border-white/30 shadow-none'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                : ['/our-work', '/work', '/programs'].includes(location.pathname)
+                  ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
+                  : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/70'
             }`}
           >
             Our Work
@@ -424,10 +505,14 @@ export const Navbar: React.FC = () => {
           {/* 4. Events Tab */}
           <Link
             to="/events"
-            className={`px-3.5 py-1.5 rounded-full transition-all ${
-              location.pathname === '/events'
-                ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
-                : 'hover:text-teal-800 hover:bg-emerald-50/70'
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 ${
+              isDark
+                ? location.pathname === '/events'
+                  ? 'text-white font-bold bg-white/20 border border-white/30 shadow-none'
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                : location.pathname === '/events'
+                  ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
+                  : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/70'
             }`}
           >
             Events
@@ -443,19 +528,23 @@ export const Navbar: React.FC = () => {
               onClick={() => toggleDropdown('portal')}
               aria-expanded={openDropdown === 'portal'}
               aria-haspopup="true"
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all focus:outline-none cursor-pointer ${
-                location.pathname.startsWith('/portal') ||
-                location.pathname.startsWith('/admin') ||
-                openDropdown === 'portal'
-                  ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
-                  : 'hover:text-teal-800 hover:bg-emerald-50/70'
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all duration-200 focus:outline-none cursor-pointer ${
+                isDark
+                  ? location.pathname.startsWith('/portal') || location.pathname.startsWith('/admin') || openDropdown === 'portal'
+                    ? 'text-white font-bold bg-white/20 border border-white/30 shadow-none'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                  : location.pathname.startsWith('/portal') || location.pathname.startsWith('/admin') || openDropdown === 'portal'
+                    ? 'text-teal-900 font-bold bg-emerald-50 border border-emerald-200/90 shadow-2xs'
+                    : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/70'
               }`}
             >
               <span>Portal</span>
               <ChevronDown
                 size={13}
                 className={`transition-transform duration-200 ${
-                  openDropdown === 'portal' ? 'rotate-180 text-teal-700' : 'text-slate-400'
+                  openDropdown === 'portal'
+                    ? isDark ? 'rotate-180 text-white' : 'rotate-180 text-teal-700'
+                    : isDark ? 'text-white/70' : 'text-slate-400'
                 }`}
               />
             </button>
@@ -518,32 +607,52 @@ export const Navbar: React.FC = () => {
               {/* Dynamic Role Badge */}
               <div className="hidden lg:flex items-center">
                 {roleLevel === 1 && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-500/15 text-amber-700 border border-amber-300 flex items-center gap-1 shadow-2xs">
-                    <Crown size={11} className="text-amber-600" />
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase flex items-center gap-1 transition-all ${
+                    isDark
+                      ? 'bg-amber-500/25 text-amber-200 border border-amber-400/40'
+                      : 'bg-amber-500/15 text-amber-700 border border-amber-300 shadow-2xs'
+                  }`}>
+                    <Crown size={11} className={isDark ? 'text-amber-300' : 'text-amber-600'} />
                     <span>Super Admin</span>
                   </span>
                 )}
                 {roleLevel === 2 && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-teal-500/15 text-teal-700 border border-teal-300 flex items-center gap-1 shadow-2xs">
-                    <Shield size={11} className="text-teal-600" />
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase flex items-center gap-1 transition-all ${
+                    isDark
+                      ? 'bg-teal-500/25 text-teal-200 border border-teal-400/40'
+                      : 'bg-teal-500/15 text-teal-700 border border-teal-300 shadow-2xs'
+                  }`}>
+                    <Shield size={11} className={isDark ? 'text-teal-300' : 'text-teal-600'} />
                     <span>Admin</span>
                   </span>
                 )}
                 {roleLevel === 3 && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-indigo-500/15 text-indigo-700 border border-indigo-300 flex items-center gap-1 shadow-2xs">
-                    <Zap size={11} className="text-indigo-600" />
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase flex items-center gap-1 transition-all ${
+                    isDark
+                      ? 'bg-indigo-500/25 text-indigo-200 border border-indigo-400/40'
+                      : 'bg-indigo-500/15 text-indigo-700 border border-indigo-300 shadow-2xs'
+                  }`}>
+                    <Zap size={11} className={isDark ? 'text-indigo-300' : 'text-indigo-600'} />
                     <span>Lead: {OFFICIAL_DOMAINS.find(d => d.key === userDomain)?.name || 'Domain'}</span>
                   </span>
                 )}
                 {roleLevel === 4 && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/15 text-emerald-700 border border-emerald-300 flex items-center gap-1 shadow-2xs">
-                    <UserIcon size={11} className="text-emerald-600" />
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase flex items-center gap-1 transition-all ${
+                    isDark
+                      ? 'bg-emerald-500/25 text-emerald-200 border border-emerald-400/40'
+                      : 'bg-emerald-500/15 text-emerald-700 border border-emerald-300 shadow-2xs'
+                  }`}>
+                    <UserIcon size={11} className={isDark ? 'text-emerald-300' : 'text-emerald-600'} />
                     <span>Member: {OFFICIAL_DOMAINS.find(d => d.key === userDomain)?.name || 'Club'}</span>
                   </span>
                 )}
                 {roleLevel === 5 && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-slate-100 text-slate-700 border border-slate-300 flex items-center gap-1 shadow-2xs">
-                    <Globe size={11} className="text-slate-600" />
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase flex items-center gap-1 transition-all ${
+                    isDark
+                      ? 'bg-white/10 text-white/90 border border-white/20'
+                      : 'bg-slate-100 text-slate-700 border border-slate-300 shadow-2xs'
+                  }`}>
+                    <Globe size={11} className={isDark ? 'text-white/70' : 'text-slate-600'} />
                     <span>Normal User</span>
                   </span>
                 )}
@@ -551,20 +660,22 @@ export const Navbar: React.FC = () => {
 
               <Link
                 to={roleLevel === 3 || roleLevel === 4 ? '/portal/domain-hub' : roleLevel === 1 || roleLevel === 2 ? '/admin' : '/portal'}
-                className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-full transition-colors ${
+                className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-full transition-all duration-200 ${
                   location.pathname.startsWith('/portal') || location.pathname.startsWith('/admin')
-                    ? 'bg-teal-800 text-white shadow-xs'
-                    : 'text-slate-700 bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/70'
+                    ? isDark ? 'bg-teal-700 text-white shadow-xs' : 'bg-teal-800 text-white shadow-xs'
+                    : isDark
+                      ? 'text-white bg-white/15 hover:bg-white/25 border border-white/25'
+                      : 'text-slate-700 bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/70'
                 }`}
               >
                 {roleLevel === 3 ? (
-                  <Zap size={13} className={location.pathname.startsWith('/portal') ? 'text-white' : 'text-teal-700'} />
+                  <Zap size={13} className={location.pathname.startsWith('/portal') ? 'text-white' : isDark ? 'text-teal-300' : 'text-teal-700'} />
                 ) : roleLevel === 1 ? (
                   <Crown size={13} className={location.pathname.startsWith('/admin') ? 'text-white' : 'text-amber-500'} />
                 ) : roleLevel === 2 ? (
-                  <Shield size={13} className={location.pathname.startsWith('/admin') ? 'text-white' : 'text-teal-700'} />
+                  <Shield size={13} className={location.pathname.startsWith('/admin') ? 'text-white' : isDark ? 'text-teal-300' : 'text-teal-700'} />
                 ) : (
-                  <UserIcon size={13} className={location.pathname.startsWith('/portal') ? 'text-white' : 'text-teal-700'} />
+                  <UserIcon size={13} className={location.pathname.startsWith('/portal') ? 'text-white' : isDark ? 'text-teal-300' : 'text-teal-700'} />
                 )}
                 <span>
                   {roleLevel === 3
@@ -580,7 +691,11 @@ export const Navbar: React.FC = () => {
               </Link>
               <button
                 onClick={handleLogout}
-                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors focus:outline-none cursor-pointer"
+                className={`p-1.5 rounded-full transition-colors focus:outline-none cursor-pointer ${
+                  isDark
+                    ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'
+                    : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                }`}
                 title={`Logout (${user?.name || 'User'})`}
                 aria-label="Logout"
               >
@@ -590,7 +705,11 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="text-xs font-semibold text-slate-700 hover:text-teal-800 px-3.5 py-1.5 rounded-full hover:bg-emerald-50/80 transition-colors border border-emerald-200/70"
+              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-colors duration-200 ${
+                isDark
+                  ? 'text-white hover:text-white bg-white/15 hover:bg-white/25 border border-white/25'
+                  : 'text-slate-700 hover:text-teal-800 hover:bg-emerald-50/80 border border-emerald-200/70'
+              }`}
             >
               Sign In
             </Link>
@@ -610,7 +729,11 @@ export const Navbar: React.FC = () => {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-800 hover:bg-emerald-50 rounded-full focus:outline-none"
+            className={`p-2 rounded-full focus:outline-none transition-colors duration-200 ${
+              isDark
+                ? 'text-white hover:bg-white/10'
+                : 'text-slate-800 hover:bg-emerald-50'
+            }`}
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
           >

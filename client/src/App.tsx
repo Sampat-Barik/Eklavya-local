@@ -26,6 +26,9 @@ const CampusIntake = lazy(() => import('./pages/CampusIntake').then((m) => ({ de
 const CorporatePartnerships = lazy(() => import('./pages/CorporatePartnerships').then((m) => ({ default: m.CorporatePartnerships })));
 const AccessDenied = lazy(() => import('./pages/AccessDenied').then((m) => ({ default: m.AccessDenied })));
 
+// Standalone Pages (no PublicLayout chrome)
+const LithosHero = lazy(() => import('./pages/LithosHero').then((m) => ({ default: m.LithosHero })));
+
 // User Portal Pages (Lazy Loaded)
 const PortalDashboard = lazy(() => import('./pages/portal/PortalDashboard').then((m) => ({ default: m.PortalDashboard })));
 const PortalProfile = lazy(() => import('./pages/portal/PortalProfile').then((m) => ({ default: m.PortalProfile })));
@@ -59,6 +62,11 @@ function App() {
   return (
     <Suspense fallback={<RouteLoader />}>
       <Routes>
+        {/* ========================================================================= */}
+        {/* 0. STANDALONE PAGES (No PublicLayout — full-screen, no global chrome)     */}
+        {/* ========================================================================= */}
+        <Route path="/lithos" element={<LithosHero />} />
+
         {/* ========================================================================= */}
         {/* 1. PUBLIC & MEMBER LAYERS (Uses Public Navbar + Footer)                  */}
         {/* ========================================================================= */}
